@@ -8,6 +8,7 @@ function Tiles(props) {
   if (!Array.isArray(props.tweetData)) {
     return <Modal />;
   }
+  // console.table(props)
   const tweetCards = props.tweetData.map((item) => (
     <Cards
       id={item.id}
@@ -16,6 +17,7 @@ function Tiles(props) {
       img_url={item.user.profile_image_url}
       favorite_count={item.favorite_count}
       text={item.full_text}
+      media= {item.display_media}
     />
   ));
   return (

@@ -6,7 +6,7 @@ import Searchbar from "./Components/Searchbar";
 import Tiles from "./Components/Tiles";
 import Carousel from "./Components/Carousel";
 import {Switch, Route} from "react-router-dom";
-
+import tweetParser from "./tweetParser"
 
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     getWallTweets: async function (searchString, searchType) {
       await axios
         .get(`http://localhost:5000/api/wall/${searchType}?search=${searchString}`)
-        .then((res) => setWallTweets(res.data.statuses))
+        .then((res) => setWallTweets(tweetParser(res.data.statuses)))
         .catch((error) => console.log(error));
     },
     getSingleTweet: async function (searchString, searchType) {
@@ -36,8 +36,7 @@ function App() {
   }, [searchName]);
 
   function handleChange(event) {
-    const { value } = event.target;
-    setSearchString(value);
+    setSearchString(event.target.value);
   }
 
   function handleClickButton(event) {

@@ -8,6 +8,7 @@ function Cards({
   img_url,
   favorite_count,
   text,
+  media
 }) {
   return (
     <div className="card" style={{ width: 450 }} key={id}>
@@ -21,6 +22,7 @@ function Cards({
         </h6>
 
         <p className="card-text">{text}</p>
+        {media}
       </div>
       <div className="card-footer text-muted">{favorite_count}</div>
     </div>
