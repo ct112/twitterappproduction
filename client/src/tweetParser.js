@@ -2,7 +2,7 @@ import React from "react";
 import curry from "./img/curry.png";
 
 function tweetParser(tweets) {
-  
+
   function add_images(tweet) {
     return [
       <img
@@ -39,21 +39,3 @@ function tweetParser(tweets) {
 }
 export default tweetParser;
 
-// for (const i = 0; i > tweets.length; i++) {
-//   if (
-//     tweets[i].extended_entities
-//   ) {
-//     tweets[i].display_media = tweets[i].extended_entities.media_url.map(
-//       (url, index) => {
-//         return <img src={url} alt={index} />;
-//       }
-//     );
-//   }
-// }
-// return tweets;
-// if (tweet.entities.extended_entities) {
-//   tweet.display_media = tweet.extended_entities.media.map(({media_url}, index) => {
-//       return <img src={media_url} alt={index} />;
-//     }
-//   );
-// }
