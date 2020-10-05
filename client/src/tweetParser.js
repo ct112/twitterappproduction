@@ -2,7 +2,6 @@ import React from "react";
 import curry from "./img/curry.png";
 
 function tweetParser(tweets) {
-
   function add_images(tweet) {
     return [
       <img
@@ -24,6 +23,41 @@ function tweetParser(tweets) {
     ];
   }
 
+  function replaceTagsWithLinks(tweet) {
+    tweet.full_text = tweet.full_text.replace(
+      /#+([a-zA-Z0-9_]+)/gi,
+      (hashtag) =>
+        `<a href='https://twitter.com/hashtag/${hashtag.substring(
+          1
+        )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
+    );
+    tweet.full_text = tweet.full_text.replace(
+      /\$+([a-zA-Z0-9_]+)/gi,
+      (cashtag) =>
+        `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
+    );
+  }
+
+  function replaceScreeNamesWithLink(tweet) {
+    tweet.full_text = tweet.full_text.replace(
+      /@+([a-zA-Z0-9_]+)/gi,
+      (screenName) =>
+        `<a> href='https://twitter.com/${screenName.substring(
+          1
+        )}' target='_blank'>${screenName}</a>`
+    );
+  }
+
+  function replaceLink(tweet){
+    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    tweet.full_text = tweet.full_text.replace(
+      urlRegex,
+      (url) =>
+      `<a href='${url}' target='_blank'>${url}</a>`
+    );
+  }
+    
+
   for (let i = 0; i < tweets.length; i++) {
     if (tweets[i].extended_entities) {
       tweets[i].display_media =
@@ -33,9 +67,11 @@ function tweetParser(tweets) {
     } else {
       tweets[i].display_media = [];
     }
+    replaceTagsWithLinks(tweets[i]);
+    replaceScreeNamesWithLink(tweets[i]);
+    replaceLink(tweets[i]);
+    console.log(tweets[i].full_text);
   }
-  // console.table(tweets);
   return tweets;
 }
 export default tweetParser;
-

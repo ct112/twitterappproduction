@@ -20,7 +20,7 @@ function Cards({
         <h6>
           <Moment format="MM/DD/YYYY">{date_created}</Moment>
         </h6>
-
+        
         <p className="card-text">{text}</p>
       {media}
       </div>
