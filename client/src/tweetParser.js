@@ -24,18 +24,21 @@ function tweetParser(tweets) {
   }
 
   function replaceTagsWithLinks(tweet) {
-    tweet.full_text = tweet.full_text.replace(
-      /#+([a-zA-Z0-9_]+)/gi,
-      (hashtag) =>
-        `<a href='https://twitter.com/hashtag/${hashtag.substring(
-          1
-        )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
-    );
-    tweet.full_text = tweet.full_text.replace(
-      /\$+([a-zA-Z0-9_]+)/gi,
-      (cashtag) =>
-        `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
-    );
+    // tweet.full_text = tweet.full_text.replace(
+    //   /#+([a-zA-Z0-9_]+)/gi,
+    //   (hashtag) =>
+    //     `<a href='https://twitter.com/hashtag/${hashtag.substring(
+    //       1
+    //     )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
+    // );
+    tweet.full_text= [
+      'Hey ',
+      <a href='https://twitter.com/ian_sinn'>@ian_sinn</a>, 'check out this link ']
+    // tweet.full_text = tweet.full_text.replace(
+    //   /\$+([a-zA-Z0-9_]+)/gi,
+    //   (cashtag) =>
+    //     `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
+    // );
   }
 
   function replaceScreeNamesWithLink(tweet) {
@@ -48,7 +51,7 @@ function tweetParser(tweets) {
     );
   }
 
-  function replaceLink(tweet){
+  function replaceWebAddressWithLink(tweet){
     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     tweet.full_text = tweet.full_text.replace(
       urlRegex,
@@ -68,8 +71,8 @@ function tweetParser(tweets) {
       tweets[i].display_media = [];
     }
     replaceTagsWithLinks(tweets[i]);
-    replaceScreeNamesWithLink(tweets[i]);
-    replaceLink(tweets[i]);
+    // replaceScreeNamesWithLink(tweets[i]);
+    // replaceWebAddressWithLink(tweets[i]);
     console.log(tweets[i].full_text);
   }
   return tweets;
