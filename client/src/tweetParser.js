@@ -1,5 +1,6 @@
 import React from "react";
 import curry from "./img/curry.png";
+import regexifyString from "regexify-string"
 
 function tweetParser(tweets) {
   function add_images(tweet) {
@@ -24,6 +25,22 @@ function tweetParser(tweets) {
   }
 
   function replaceTagsWithLinks(tweet) {
+    tweet.full_text = regexifyString({
+      pattern: /#+([a-zA-Z0-9_]+)/gi,
+      decorator: (match, index) => {
+        return <a href={`https://twitter.com/hashtag/${match.substring(1)}?src=hashtag_click`} target='_blank'>{match}</a>;
+      },
+      input: tweet.full_text,
+    });
+
+    tweet.full_text = regexifyString({
+      pattern: /\$+([a-zA-Z0-9_]+)/gi,
+      decorator: (match, index) => {
+        return <a href={`https://twitter.com/search?q=%24%${match.substring(1)}&src=cashtag_click`} target='_blank'>{match}</a>;
+      },
+      input: tweet.full_text.join(' '),
+    });
+    
     // tweet.full_text = tweet.full_text.replace(
     //   /#+([a-zA-Z0-9_]+)/gi,
     //   (hashtag) =>
@@ -31,15 +48,13 @@ function tweetParser(tweets) {
     //       1
     //     )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
     // );
-    tweet.full_text= [
-      'Hey ',
-      <a href='https://twitter.com/ian_sinn'>@ian_sinn</a>, 'check out this link ']
     // tweet.full_text = tweet.full_text.replace(
     //   /\$+([a-zA-Z0-9_]+)/gi,
     //   (cashtag) =>
     //     `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
     // );
   }
+  
 
   function replaceScreeNamesWithLink(tweet) {
     tweet.full_text = tweet.full_text.replace(
@@ -51,15 +66,13 @@ function tweetParser(tweets) {
     );
   }
 
-  function replaceWebAddressWithLink(tweet){
-    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  function replaceWebAddressWithLink(tweet) {
+    var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
     tweet.full_text = tweet.full_text.replace(
       urlRegex,
-      (url) =>
-      `<a href='${url}' target='_blank'>${url}</a>`
+      (url) => `<a href='${url}' target='_blank'>${url}</a>`
     );
   }
-    
 
   for (let i = 0; i < tweets.length; i++) {
     if (tweets[i].extended_entities) {

@@ -17,7 +17,9 @@
     "react-masonry-css": "^1.0.14",
     "react-moment": "^1.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "react-string-replace": "^0.4.4",
+    "regexify-string": "^1.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
