@@ -1,6 +1,6 @@
 import React from "react";
 import curry from "./img/curry.png";
-import regexifyString from "regexify-string"
+import regexifyString from "regexify-string";
 
 function tweetParser(tweets) {
   function add_images(tweet) {
@@ -25,54 +25,82 @@ function tweetParser(tweets) {
   }
 
   function replaceTagsWithLinks(tweet) {
-    tweet.full_text = regexifyString({
-      pattern: /#+([a-zA-Z0-9_]+)/gi,
-      decorator: (match, index) => {
-        return <a href={`https://twitter.com/hashtag/${match.substring(1)}?src=hashtag_click`} target='_blank'>{match}</a>;
-      },
-      input: tweet.full_text,
-    });
-
-    tweet.full_text = regexifyString({
-      pattern: /\$+([a-zA-Z0-9_]+)/gi,
-      decorator: (match, index) => {
-        return <a href={`https://twitter.com/search?q=%24%${match.substring(1)}&src=cashtag_click`} target='_blank'>{match}</a>;
-      },
-      input: tweet.full_text.join(' '),
-    });
-    
-    // tweet.full_text = tweet.full_text.replace(
-    //   /#+([a-zA-Z0-9_]+)/gi,
-    //   (hashtag) =>
-    //     `<a href='https://twitter.com/hashtag/${hashtag.substring(
-    //       1
-    //     )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
-    // );
-    // tweet.full_text = tweet.full_text.replace(
-    //   /\$+([a-zA-Z0-9_]+)/gi,
-    //   (cashtag) =>
-    //     `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
-    // );
-  }
-  
-
-  function replaceScreeNamesWithLink(tweet) {
-    tweet.full_text = tweet.full_text.replace(
-      /@+([a-zA-Z0-9_]+)/gi,
-      (screenName) =>
-        `<a> href='https://twitter.com/${screenName.substring(
+    const regexCashtag = /\$+([a-zA-Z0-9_]+)/gi;
+    const regexHashtag = /#+([a-zA-Z0-9_]+)/gi;
+    const reactStringReplace = require("react-string-replace");
+    tweet.full_text = reactStringReplace(tweet.full_text, regexHashtag, (match, i) => (
+      <a
+        href={`https://twitter.com/hashtag/${match.substring(
           1
-        )}' target='_blank'>${screenName}</a>`
-    );
+        )}?src=hashtag_click`}
+        target="_blank"
+      >
+        {match}
+      </a>
+    ));
+
+    tweet.full_text = reactStringReplace(tweet.full_text, regexCashtag, (match, i) => (
+      <a
+        href={`https://twitter.com/search?q=%24%${match.substring(
+          1
+        )}&src=cashtag_click`}
+        target="_blank"
+      >
+        {match}
+      </a>
+    ));
+    console.log(tweet)
+    
   }
 
-  function replaceWebAddressWithLink(tweet) {
-    var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-    tweet.full_text = tweet.full_text.replace(
-      urlRegex,
-      (url) => `<a href='${url}' target='_blank'>${url}</a>`
-    );
-  }
+  // function replaceTagsWithLinks(tweet) {
+  //   tweet.full_text = regexifyString({
+  //     pattern: /#+([a-zA-Z0-9_]+)/gi,
+  //     decorator: (match, index) => {
+  //       return <a href={`https://twitter.com/hashtag/${match.substring(1)}?src=hashtag_click`} target='_blank'>{match}</a>;
+  //     },
+  //     input: tweet.full_text,
+  //   });
+
+  //   tweet.full_text = regexifyString({
+  //     pattern: /\$+([a-zA-Z0-9_]+)/gi,
+  //     decorator: (match, index) => {
+  //       return <a href={`https://twitter.com/search?q=%24%${match.substring(1)}&src=cashtag_click`} target='_blank'>{match}</a>;
+  //     },
+  //     input: tweet.full_text.join(' '),
+  //   });
+
+  // tweet.full_text = tweet.full_text.replace(
+  //   /#+([a-zA-Z0-9_]+)/gi,
+  //   (hashtag) =>
+  //     `<a href='https://twitter.com/hashtag/${hashtag.substring(
+  //       1
+  //     )}?src=hashtag_click' target='_blank'>${hashtag}</a>`
+  // );
+  // tweet.full_text = tweet.full_text.replace(
+  //   /\$+([a-zA-Z0-9_]+)/gi,
+  //   (cashtag) =>
+  //     `https://twitter.com/search?q=%24%${cashtag}&src=cashtag_click target='_blank'>${cashtag}</a>`
+  // );
+  // }
+
+  // function replaceScreeNamesWithLink(tweet) {
+  //   tweet.full_text = tweet.full_text.replace(
+  //     /@+([a-zA-Z0-9_]+)/gi,
+  //     (screenName) =>
+  //       `<a> href='https://twitter.com/${screenName.substring(
+  //         1
+  //       )}' target='_blank'>${screenName}</a>`
+  //   );
+  // }
+
+  // function replaceWebAddressWithLink(tweet) {
+  //   var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  //   tweet.full_text = tweet.full_text.replace(
+  //     urlRegex,
+  //     (url) => `<a href='${url}' target='_blank'>${url}</a>`
+  //   );
+  // }
 
   for (let i = 0; i < tweets.length; i++) {
     if (tweets[i].extended_entities) {
@@ -84,8 +112,6 @@ function tweetParser(tweets) {
       tweets[i].display_media = [];
     }
     replaceTagsWithLinks(tweets[i]);
-    // replaceScreeNamesWithLink(tweets[i]);
-    // replaceWebAddressWithLink(tweets[i]);
     console.log(tweets[i].full_text);
   }
   return tweets;
