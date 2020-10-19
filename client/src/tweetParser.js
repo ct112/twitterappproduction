@@ -1,6 +1,7 @@
 import React from "react";
 import curry from "./img/curry.png";
 import regexifyString from "regexify-string";
+import reactStringReplace from "react-string-replace";
 
 function tweetParser(tweets) {
   function add_images(tweet) {
@@ -28,29 +29,53 @@ function tweetParser(tweets) {
     const regexCashtag = /\$+([a-zA-Z0-9_]+)/gi;
     const regexHashtag = /#+([a-zA-Z0-9_]+)/gi;
     const reactStringReplace = require("react-string-replace");
-    tweet.full_text = reactStringReplace(tweet.full_text, regexHashtag, (match, i) => (
-      <a
-        href={`https://twitter.com/hashtag/${match.substring(
-          1
-        )}?src=hashtag_click`}
-        target="_blank"
-      >
-        {match}
-      </a>
-    ));
+    tweet.full_text = reactStringReplace(
+      tweet.full_text,
+      regexHashtag,
+      (match, i) => (
+        <a
+          href={`https://twitter.com/hashtag/${match}?src=hashtag_click`}
+          target="_blank"
+        >
+          #{match}
+        </a>
+      )
+    );
 
-    tweet.full_text = reactStringReplace(tweet.full_text, regexCashtag, (match, i) => (
-      <a
-        href={`https://twitter.com/search?q=%24%${match.substring(
-          1
-        )}&src=cashtag_click`}
-        target="_blank"
-      >
-        {match}
-      </a>
-    ));
-    console.log(tweet)
-    
+    tweet.full_text = reactStringReplace(
+      tweet.full_text,
+      regexCashtag,
+      (match, i) => (
+        <a
+          href={`https://twitter.com/search?q=%24%${match}&src=cashtag_click`}
+          target="_blank"
+        >
+          ${match}
+        </a>
+      )
+    );
+    console.log(tweet);
+  }
+
+  function replaceWebAdresseswithLink(tweet) {
+    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+    tweet.full_text = reactStringReplace(
+      tweet.full_text,
+      urlRegex,
+      (match, i) => (
+        <a href={match} target="_blank">
+          {match}
+        </a>
+      )
+    );
+  }
+
+  function replaceSreenamesWithLinks(tweet){
+    const screenNameRegex = /@+([a-zA-Z0-9_]+)/gi
+    tweet.full_text = reactStringReplace(tweet.full_text, screenNameRegex, (match, i) => (
+             <a href={`https://twitter.com/${match.substring(1)}`} target='_blank'>{match}</a>
+
+    ))
   }
 
   // function replaceTagsWithLinks(tweet) {
@@ -112,6 +137,7 @@ function tweetParser(tweets) {
       tweets[i].display_media = [];
     }
     replaceTagsWithLinks(tweets[i]);
+    replaceWebAdresseswithLink(tweets[i]);
     console.log(tweets[i].full_text);
   }
   return tweets;
