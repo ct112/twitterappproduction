@@ -10,7 +10,7 @@ function Modal() {
   return (
     <>
       <Modals show={show} onHide={handleClose}>
-        <Modals.Body>Woohoo, you're reading this text in a modal!</Modals.Body>
+        <Modals.Body>User does not exist!</Modals.Body>
         <Modals.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close

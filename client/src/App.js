@@ -26,7 +26,7 @@ function App() {
       if (searchString) {
         await axios
           .get(`http://localhost:5000/api/randomtweet/${searchType}?search=${searchString}`)
-          .then((res) => setTweetData(res.data))
+          .then((res) => setTweetData(tweetParser(res.data)))
           .catch((error) => console.log(error));
       }
     },

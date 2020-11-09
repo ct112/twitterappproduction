@@ -24,7 +24,7 @@ function Cards({
         <p className="card-text">{text}</p>
       {media}
       </div>
-      <div className="card-footer text-muted">{favorite_count}</div>
+  <div className="card-footer text-muted">{'\u2764'}{favorite_count}</div>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React from "react";
 import curry from "./img/curry.png";
-import regexifyString from "regexify-string";
 import reactStringReplace from "react-string-replace";
 
 function tweetParser(tweets) {
@@ -58,7 +57,7 @@ function tweetParser(tweets) {
   }
 
   function replaceWebAdresseswithLink(tweet) {
-    const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+    const urlRegex = /(https?:\/\/\S+)/g;
     tweet.full_text = reactStringReplace(
       tweet.full_text,
       urlRegex,
@@ -70,12 +69,30 @@ function tweetParser(tweets) {
     );
   }
 
-  function replaceSreenamesWithLinks(tweet){
-    const screenNameRegex = /@+([a-zA-Z0-9_]+)/gi
-    tweet.full_text = reactStringReplace(tweet.full_text, screenNameRegex, (match, i) => (
-             <a href={`https://twitter.com/${match.substring(1)}`} target='_blank'>{match}</a>
+  function replaceSreenamesWithLinks(tweet) {
+    const screenNameRegex = /@+([a-zA-Z0-9_]+)/gi;
+    tweet.full_text = reactStringReplace(
+      tweet.full_text,
+      screenNameRegex,
+      (match, i) => (
+        <a href={`https://twitter.com/${match}`} target="_blank">
+          @{match}
+        </a>
+      )
+    );
+  }
 
-    ))
+  function replaceUserNameWithLink(tweet) {
+    const userNameRegex = /([a-zA-Z0-9_]+)/gi;
+    tweet.full_text = reactStringReplace(
+      tweet.user.screename,
+      userNameRegex,
+      (match, i) => (
+        <a href={`https://twitter.com/${match}`} target="_blank">
+          {match}
+        </a>
+      )
+    );
   }
 
   // function replaceTagsWithLinks(tweet) {
@@ -138,6 +155,8 @@ function tweetParser(tweets) {
     }
     replaceTagsWithLinks(tweets[i]);
     replaceWebAdresseswithLink(tweets[i]);
+    replaceSreenamesWithLinks(tweets[i]);
+    // replaceUserNameWithLink(tweets[i]);
     console.log(tweets[i].full_text);
   }
   return tweets;
