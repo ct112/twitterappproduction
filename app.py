@@ -2,16 +2,21 @@ from flask import Flask, request, jsonify
 import requests
 import base64
 import sys
+import os
+from dotenv import load_dotenv
 from random import randint
 from dotenv import load_dotenv
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+load_dotenv()
+
+# print(os.getenv('API_KEY'), file=sys.stderr)
 
 app_authentication_data = {
-    "api_key": "kocbYqCzxvYXFMkfqnAekTlIu",
-    "api_secret": "F2K5oMKTTXhbHWrrRabSXVvqTzsRYXESPKxdUvXvaW1ckKqMDK",
+    "api_key": os.getenv('API_KEY'),
+    "api_secret": os.getenv('API_SECRET'),
     "bearer_token_URL": "https://api.twitter.com/oauth2/token",
     "authorization_headers": {
         "Authorization": "",
